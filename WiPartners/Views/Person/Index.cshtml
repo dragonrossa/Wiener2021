@@ -1,0 +1,249 @@
+﻿@model WiPartners.Models.PartnerPersonalData
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<title>@ViewBag.Title</title>
+
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+</head>
+
+<style>
+    .button {
+        background-color: #cc0e0e;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    .button4Hide {
+        border-radius: 12px;
+    }
+
+    tr:nth-child(2) {
+        background: #9acef4;
+        font-weight: bold;
+    }
+
+    h5 {
+        font-weight: bold;
+    }
+</style>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h1>List of partners</h1>
+    </div>
+    <br />
+    <div class="container-fluid">
+        <button type="button" class="btn btn-light">@Html.ActionLink("Add partner", "NewPartner")</button>
+    </div>
+    <br />
+    <fieldset>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+
+
+                    <table class="table next">
+                        <tr>
+                            <th style="text-align:center">
+                                User details
+                            </th>
+
+                        </tr>
+                        @foreach (var item in Model.partners)
+                        {
+                            <tr>
+
+                                <td class="userid" id="@item.ID">
+
+                               
+                                    @item.FirstName @item.LastName,
+                                    @item.PartnerNumber,
+                                    @item.CroatianPIN,
+
+                                    @{
+                                        var type = "";
+                                        if (item.PartnerTypeId == 1)
+                                        {
+                                            type = "Personal";
+                                        }
+                                        else
+                                        {
+                                            type = "Legal";
+                                        }
+                                    }
+
+                                    @type,
+                                    @item.CreatedAtUtc,
+
+                                    @{
+                                        var isForeign = "";
+                                        if (item.IsForeign == true)
+                                        {
+                                            isForeign = "Foreign";
+                                        }
+                                        else
+                                        {
+                                            isForeign = "Not Foreign";
+                                        }
+                                    }
+
+                                    @isForeign,
+
+                                    @{ 
+                                            var gender = "";
+
+                                            if ((item.Gender).ToString() == "M")
+                                            {
+                                                gender = "Male";
+                                            }
+                                            else if ((item.Gender).ToString() == "F") {
+                                                gender = "Female";
+                                            }
+                                            else
+                                            {
+                                                gender = "None of the above";
+                                            }
+                                     }
+                                        
+                                    
+                                   @gender
+                                
+                                    <div class="abcd" style="opacity: 0;">
+                                        ,
+                                        @item.Adress,
+                                        @item.CreateByUser,
+                                        @item.ExternalCode
+                                    </div>
+
+
+
+                                </td>
+
+
+
+                            </tr>
+
+                        }
+
+                    </table>
+
+
+                    <div class="modal fade" tabindex="-1" id="loginModal"
+                         data-keyboard="false" data-backdrop="static">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        ×
+                                    </button>
+                                    <h4 class="modal-title descripton">
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <h5>Name:</h5>
+                                            <div class="name"></div>
+                                            <h5>Partner number:</h5>
+                                            <div class="partnernumber"></div>
+                                            <h5>Croatian PIN:</h5>
+                                            <div class="croatianpin"></div>
+                                            <h5>Partner type ID:</h5>
+                                            <div class="partnertypeid"></div>
+                                            <h5>Created at UTC:</h5>
+                                            <div class="createdatutc"></div>
+                                            <h5>Is Foreign:</h5>
+                                            <div class="isforeign"></div>
+                                            <h5>Gender:</h5>
+                                            <div class="gender"></div>
+                                            <h5>Adress:</h5>
+                                            <div class="adress"></div>
+                                            <h5>E-mail:</h5>
+                                            <div class="createByUser"></div>
+                                            <h5>External code:</h5>
+                                            <div class="externalCode"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="btnHideModal" class="btn btn-primary button buttonHide">
+                                        Hide
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnHideModal").click(function () {
+
+            $("#loginModal").modal('hide');
+        });
+        $(".next").click(function () {
+            $("#loginModal").modal('show');
+        });
+
+        $('.userid').click(function () {
+
+            //get users data by ID
+            var ID = this.id;
+            $('.user3').text(ID);
+
+            //grab data from front
+            var span_Text = document.getElementById(ID).innerText;
+            var short_description = span_Text.split(' ').slice(0).join(' ');
+            var shorter = short_description.split(',');
+            console.log(shorter);
+            var name = shorter[0];
+            var partnernumber = shorter[1];
+            var croatianpin = shorter[2];
+            var partnertypeid = shorter[3];
+            var createdatutc = shorter[4];
+            var isforeign = shorter[5];
+            var gender = shorter[6];
+            var adress = shorter[7];
+            var createByUser = shorter[8];
+            var externalCode = shorter[9];
+            var descripton = "Details about " + shorter[0];
+
+
+            //append data to classes
+            $('.descripton').text(descripton);
+            $('.name').text(name);
+            $('.partnernumber').text(partnernumber);
+            $('.croatianpin').text(croatianpin);
+            $('.partnertypeid').text(partnertypeid);
+            $('.createdatutc').text(createdatutc);
+            $('.isforeign').text(isforeign);
+            $('.gender').text(gender);
+            $('.adress').text(adress);
+            $('.createByUser').text(createByUser);
+            $('.externalCode').text(externalCode);
+
+        });
+    });
+</script>
